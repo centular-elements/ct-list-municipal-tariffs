@@ -1,5 +1,16 @@
 <link rel="import" href="../polymer/polymer.html">
 
+<link rel="import" href="../paper-input/paper-input.html">
+<link rel="import" href="../paper-input/paper-input-behavior.html">
+<link rel="import" href="../paper-button/paper-button.html">
+<link rel="import" href="../paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../paper-item/paper-item.html">
+<link rel="import" href="../paper-material/paper-material.html">
+<link rel="import" href="../paper-listbox/paper-listbox.html">
+<link rel="import" href="../iron-icons/social-icons.html">
+<link rel="import" href="../iron-form/iron-form.html">
+
 <!--
 `ct-list-municipal-tariffs`
 Element to display a filterable list of municipal tariffs
@@ -78,8 +89,9 @@ Element to display a filterable list of municipal tariffs
         <div class="row">
           <div class="col-xs-6">
             <paper-dropdown-menu class="custom-dropdown" label="Staff Group" always-float-label noink no-animations>
-              <paper-listbox class="dropdown-content" selected="{{_selectedUserGroupId}}" attr-for-selected="key">
-                <template is="dom-repeat" items="{{userGroups}}">
+              <paper-listbox class="dropdown-content" selected="{{_selectedMeterType}}" attr-for-selected="key">
+                <paper-item key="0">All</paper-item>
+                <template is="dom-repeat" items="{{meterTypes}}">
                   <paper-item key="[[item.id]]">[[item.name]]</paper-item>
                 </template>
               </paper-listbox>
@@ -138,6 +150,11 @@ Element to display a filterable list of municipal tariffs
 
           properties: {
               municipalityList : Array,
+              meterTypes : Array,
+              _selectedMeterType: {
+                  type: Number,
+                  value: function(){ return 0; }
+              }
           },
 
           _viewSingleMunicipality : function(e) {
