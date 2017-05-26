@@ -88,9 +88,9 @@ Element to display a filterable list of municipal tariffs
 
         <div class="row">
           <div class="col-xs-6">
-            <paper-dropdown-menu class="custom-dropdown" label="Meter  Types" always-float-label noink no-animations>
+            <paper-dropdown-menu class="custom-dropdown" label="Staff Group" always-float-label noink no-animations>
               <paper-listbox class="dropdown-content" selected="{{_selectedMeterType}}" attr-for-selected="key">
-                <paper-item key="0">All</paper-item>
+                <paper-item key="-1">All</paper-item>
                 <template is="dom-repeat" items="{{meterTypes}}">
                   <paper-item key="[[item.id]]">[[item.name]]</paper-item>
                 </template>
@@ -153,7 +153,7 @@ Element to display a filterable list of municipal tariffs
               meterTypes : Array,
               _selectedMeterType: {
                   type: Number,
-                  value: function(){ return 0; }
+                  value: function(){ return -1; }
               }
           },
 
@@ -162,7 +162,7 @@ Element to display a filterable list of municipal tariffs
               if(e.model && e.model.item.id){
                   this.fire('viewMunicipality', e.model.item.id);
               } else {
-                  this.fire('toast', {message: 'Cannot display municipalities', type: 'danger'});
+                  this.fire('toast', {message: 'Cannot display staff member', type: 'danger'});
               }
 
           },
