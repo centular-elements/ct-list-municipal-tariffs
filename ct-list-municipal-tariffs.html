@@ -1,5 +1,5 @@
 <link rel="import" href="../polymer/polymer.html">
-
+<link rel="import" href="../iron-a11y-keys/iron-a11y-keys.html">
 <link rel="import" href="../paper-input/paper-input.html">
 <link rel="import" href="../paper-input/paper-input-behavior.html">
 <link rel="import" href="../paper-button/paper-button.html">
@@ -36,8 +36,6 @@ Element to display a filterable list of municipal tariffs
         };
 
         /*padding to move from border */
-
-
         --paper-input-container-label: {
           margin-left: 10px;
         };
@@ -45,23 +43,19 @@ Element to display a filterable list of municipal tariffs
           margin-left: 10px;
         };
 
-
         --paper-input-error: {
           left: auto !important;
           right: 20px !important;
           font-style: italic;
         };
-
       }
 
       .main-section {
         margin-top:20px;
       }
 
-
       iron-icon.user-online{
         --iron-icon-fill-color:{#4d96bb;};
-
       }
       /*local dropdown menu */
       paper-menu {
@@ -81,11 +75,12 @@ Element to display a filterable list of municipal tariffs
           padding-left: 10px;
         };
       }
-
+      .table-search-button-field {
+        vertical-align: middle !important;
+      }
     </style>
     <div class="main-section">
       <div class="container-fluid">
-
         <div class="row">
           <div class="col-xs-6">
             <paper-button class="fancy margin-10v btn btn-default btn btn-primary" width="80px" raised on-tap="_newMunicipality">Add Municipality</paper-button>
@@ -94,36 +89,41 @@ Element to display a filterable list of municipal tariffs
 
         <div class="row">
           <div class="col-xs-12">
-            <template is="dom-if" if="{{_computeHasData(municipalities)}}">
-              <div class="table-responsive">
-                <table class="table table-striped table-bordered table-hover table-middle">
-                  <thead>
-                  <th>Municipality Name</th>
-                  <th>Action</th>
-                  </thead>
-                  <tbody>
 
+            <div class="table-responsive">
+              <table class="table table-striped table-bordered table-hover table-middle">
+                <thead>
+                <th>Municipality Name</th>
+                <th>Action</th>
+                </thead>
+                <iron-a11y-keys id="a11y" keys="enter" on-keys-pressed="_searchTapped"></iron-a11y-keys>
+                <tr>
+                  <td><paper-input id="txtMunicipality" label="Municipality Name"></paper-input></td>
+                  <td class="table-search-button-field text-center"><paper-button class="table-button btn-primary btn-sm" on-tap="_searchTapped" raised>Search</paper-button></td>
+                </tr>
+                <tbody>
+                <template is="dom-if" if="{{_computeHasData(municipalities)}}">
                   <template is="dom-repeat" items="{{municipalities}}">
                     <tr>
                       <td>[[item.municipality]]</td>
                       <td class="text-center"><paper-button class="table-button btn-primary btn-sm" on-tap="_viewSingleMunicipality" raised>View</paper-button></td>
                     </tr>
                   </template>
-
-                  </tbody>
-                </table>
-              </div>
-              <!--<div class="col-xs-12">
-                <nav aria-label="Page navigation">
-                  <mercury-paginator perpage="50" items="{{municipalities}}"></mercury-paginator>
-                </nav>
-              </div>-->
-            </template>
-
-            <template is="dom-if" if="{{!_computeHasData(municipalities)}}">
-              <div><p class="text-center">No Municipalities to display</p></div>
-            </template>
-
+                </template>
+                <template is="dom-if" if="{{!_computeHasData(municipalities)}}">
+                  <tr>
+                    <td class="text-center">No municipalities found</td>
+                    <td></td>
+                  </tr>
+                </template>
+                </tbody>
+              </table>
+            </div>
+            <!--<div class="col-xs-12">
+              <nav aria-label="Page navigation">
+                <mercury-paginator perpage="50" items="{{municipalities}}"></mercury-paginator>
+              </nav>
+            </div>-->
           </div>
 
         </div>
@@ -132,28 +132,31 @@ Element to display a filterable list of municipal tariffs
   </template>
 
   <script>
-      Polymer({
+    Polymer({
+      is: 'ct-list-municipal-tariffs',
 
-          is: 'ct-list-municipal-tariffs',
+      properties: {
+        municipalities : Array
+      },
 
-          properties: {
-              municipalities : Array
-          },
+      _searchTapped: function () {
+        this.fire('ct-search-municipality', this.$$('#txtMunicipality').value)
+      },
 
-          _viewSingleMunicipality : function(e) {
-              if(e.model && e.model.item.id) {
-                  this.fire('ct-view-municipality', e.model.item.id);
-              } 
-          },
+      _viewSingleMunicipality : function(e) {
+        if(e.model && e.model.item.id) {
+          this.fire('ct-view-municipality', e.model.item.id);
+        }
+      },
 
-          _computeHasData : function(list) {
-              return (list.length > 0);
-          },
+      _computeHasData : function(list) {
+        return (list.length > 0);
+      },
 
-          _newMunicipality : function(){
-              this.fire('ct-new-municipality');
-          }
+      _newMunicipality : function(){
+        this.fire('ct-new-municipality');
+      }
 
-      });
+    });
   </script>
 </dom-module>
