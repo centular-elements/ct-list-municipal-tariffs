@@ -88,36 +88,24 @@ Element to display a filterable list of municipal tariffs
 
         <div class="row">
           <div class="col-xs-6">
-            <paper-dropdown-menu class="custom-dropdown" label="Staff Group" always-float-label noink no-animations>
-              <paper-listbox class="dropdown-content" selected="{{_selectedMeterType}}" attr-for-selected="key">
-                <paper-item key="-1">All</paper-item>
-                <template is="dom-repeat" items="{{meterTypes}}">
-                  <paper-item key="[[item.id]]">[[item.name]]</paper-item>
-                </template>
-              </paper-listbox>
-            </paper-dropdown-menu>
-          </div>
-          <div class="col-xs-6">
             <paper-button class="fancy margin-10v btn btn-default btn btn-primary" width="80px" raised on-tap="_newMunicipality">Add Municipality</paper-button>
           </div>
         </div>
 
         <div class="row">
           <div class="col-xs-12">
-            <template is="dom-if" if="{{_computeHasData(municipalityList)}}">
+            <template is="dom-if" if="{{_computeHasData(municipalities)}}">
               <div class="table-responsive">
                 <table class="table table-striped table-bordered table-hover table-middle">
                   <thead>
                   <th>Municipality Name</th>
-                  <th>Utility Type</th>
                   <th>Action</th>
                   </thead>
                   <tbody>
 
-                  <template is="dom-repeat" items="{{municipalityList}}">
+                  <template is="dom-repeat" items="{{municipalities}}">
                     <tr>
-                      <td>[[item.name]]</td>
-                      <td>[[item.utilityType]]</td>
+                      <td>[[item.municipality]]</td>
                       <td class="text-center"><paper-button class="table-button btn-primary btn-sm" on-tap="_viewSingleMunicipality" raised>View</paper-button></td>
                     </tr>
                   </template>
@@ -125,14 +113,14 @@ Element to display a filterable list of municipal tariffs
                   </tbody>
                 </table>
               </div>
-              <div class="col-xs-12">
+              <!--<div class="col-xs-12">
                 <nav aria-label="Page navigation">
-                  <mercury-paginator perpage="50" items="{{municipalityList}}"></mercury-paginator>
+                  <mercury-paginator perpage="50" items="{{municipalities}}"></mercury-paginator>
                 </nav>
-              </div>
+              </div>-->
             </template>
 
-            <template is="dom-if" if="{{!_computeHasData(municipalityList)}}">
+            <template is="dom-if" if="{{!_computeHasData(municipalities)}}">
               <div><p class="text-center">No Municipalities to display</p></div>
             </template>
 
@@ -149,31 +137,21 @@ Element to display a filterable list of municipal tariffs
           is: 'ct-list-municipal-tariffs',
 
           properties: {
-              municipalityList : Array,
-              meterTypes : Array,
-              _selectedMeterType: {
-                  type: Number,
-                  value: function(){ return -1; }
-              }
+              municipalities : Array
           },
 
           _viewSingleMunicipality : function(e) {
-
-              if(e.model && e.model.item.id){
-                  this.fire('viewMunicipality', e.model.item.id);
-              } else {
-                  this.fire('toast', {message: 'Cannot display staff member', type: 'danger'});
-              }
-
+              if(e.model && e.model.item.id) {
+                  this.fire('ct-view-municipality', e.model.item.id);
+              } 
           },
 
-          _computeHasData : function(list){
+          _computeHasData : function(list) {
               return (list.length > 0);
           },
 
-
           _newMunicipality : function(){
-              this.fire('newMunicipality');
+              this.fire('ct-new-municipality');
           }
 
       });
